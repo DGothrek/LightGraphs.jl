@@ -206,3 +206,5 @@ function shortest_paths(g::AbstractGraph, src::U, dest::U, distmx::AbstractMatri
 
     return DijkstraResult{T, U}(parents, dists, preds, pathcounts, closest_vertices)
 end
+
+shortest_paths(g::AbstractGraph, s, t, distmx::AbstractMatrix) = shortest_paths(g, s, t,  distmx, Dijkstra())

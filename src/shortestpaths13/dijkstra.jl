@@ -15,7 +15,7 @@ end
 dijkstra_shortest_paths(g::AbstractGraph, src::Integer, distmx::AbstractMatrix=weights(g); allpaths=false, trackvertices=false) =
 dijkstra_shortest_paths(g, [src;], distmx; allpaths=allpaths, trackvertices=trackvertices)
 
-function dijkstra_shortest_path(g::AbstractGraph,
+function dijkstra_shortest_paths(g::AbstractGraph,
     src::U,
     dest::U,
     distmx::AbstractMatrix{T}=weights(g);

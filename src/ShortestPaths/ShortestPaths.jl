@@ -91,6 +91,9 @@ s5 = shortest_paths(g, 1, w, DEsopoPape())
 shortest_paths(g::AbstractGraph, s, alg::ShortestPathAlgorithm) =
     shortest_paths(g, s, weights(g), alg)
 
+shortest_paths(g::AbstractGraph, s, t) =
+    shortest_paths(g, s, t, weights(g), Dijkstra())
+
 # If we don't specify an algorithm AND there are no dists, use BFS.
 shortest_paths(g::AbstractGraph{T}, s::Integer) where {T<:Integer} = shortest_paths(g, s, BFS())
 shortest_paths(g::AbstractGraph{T}, ss::AbstractVector) where {T<:Integer} = shortest_paths(g, ss, BFS())
