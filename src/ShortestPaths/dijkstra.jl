@@ -132,3 +132,77 @@ end
 shortest_paths(g::AbstractGraph, s::Integer, distmx::AbstractMatrix, alg::Dijkstra) = shortest_paths(g, [s], distmx, alg)
 # If we don't specify an algorithm, use dijkstra.
 shortest_paths(g::AbstractGraph, s, distmx::AbstractMatrix) = shortest_paths(g, s, distmx, Dijkstra())
+
+function shortest_paths(g::AbstractGraph, src::U, dest::U, distmx::AbstractMatrix{T}, alg::Dijkstra) where {T, U<:Integer}
+    nvg = nv(g)
+    dists = fill(typemax(T), nvg)
+    parents = zeros(U, nvg)
+    visited = zeros(Bool, nvg)
+
+    pathcounts = zeros(UInt64, nvg)
+    preds = fill(Vector{U}(), nvg)
+    H = PriorityQueue{U,T}()
+    # fill creates only one array.
+
+    dists[src] = zero(T)
+    visited[src] = true
+    pathcounts[src] = 1
+    H[src] = zero(T)
+
+    closest_vertices = Vector{U}()  # Maintains vertices in order of distances from source
+    sizehint!(closest_vertices, nvg)
+
+    while (!isempty(H)) & (u != dest)
+        u = dequeue!(H)
+
+        if alg.track_vertices
+            push!(closest_vertices, u)
+        end
+
+        d = dists[u] # Cannot be typemax if `u` is in the queue
+        for v in alg.neighborfn(g, u)
+            alt = d + distmx[u, v]
+
+            alt > alg.maxdist && continue
+
+            if !visited[v]
+                visited[v] = true
+                dists[v] = alt
+                parents[v] = u
+                pathcounts[v] += pathcounts[u]
+                if alg.all_paths
+                    preds[v] = [u;]
+                end
+                H[v] = alt
+            elseif alt < dists[v]
+                dists[v] = alt
+                parents[v] = u
+                pathcounts[v] = pathcounts[u]
+                if alg.all_paths
+                    resize!(preds[v], 1)
+                    preds[v][1] = u
+                end
+                H[v] = alt
+            elseif alt == dists[v]
+                pathcounts[v] += pathcounts[u]
+                if alg.all_paths
+                    push!(preds[v], u)
+                end
+            end
+        end
+    end
+
+    if alg.track_vertices
+        for s in vertices(g)
+            if !visited[s]
+                push!(closest_vertices, s)
+            end
+        end
+    end
+
+    pathcounts[src] = 1
+    parents[src] = 0
+    empty!(preds[src])
+
+    return DijkstraResult{T, U}(parents, dists, preds, pathcounts, closest_vertices)
+end

@@ -14,3 +14,14 @@ end
 
 dijkstra_shortest_paths(g::AbstractGraph, src::Integer, distmx::AbstractMatrix=weights(g); allpaths=false, trackvertices=false) =
 dijkstra_shortest_paths(g, [src;], distmx; allpaths=allpaths, trackvertices=trackvertices)
+
+function dijkstra_shortest_path(g::AbstractGraph,
+    src::U,
+    dest::U,
+    distmx::AbstractMatrix{T}=weights(g);
+    allpaths=false,
+    trackvertices=false
+    ) where T <: Real where U <: Integer
+
+    LightGraphs.ShortestPaths.shortest_paths(g, src, dest, distmx, LightGraphs.ShortestPaths.Dijkstra(all_paths=allpaths, track_vertices=trackvertices))
+end
