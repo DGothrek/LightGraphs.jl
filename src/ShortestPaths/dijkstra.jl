@@ -152,6 +152,8 @@ function shortest_paths(g::AbstractGraph, src::U, dest::U, distmx::AbstractMatri
     closest_vertices = Vector{U}()  # Maintains vertices in order of distances from source
     sizehint!(closest_vertices, nvg)
 
+    u = -1
+    
     while (!isempty(H)) & (u != dest)
         u = dequeue!(H)
 
