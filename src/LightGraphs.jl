@@ -88,7 +88,7 @@ simplecycles_limited_length,
 mincut, maximum_adjacency_visit,
 
 # a-star, dijkstra, bellman-ford, floyd-warshall, desopo-pape, spfa
-a_star, dijkstra_shortest_paths, bellman_ford_shortest_paths,
+a_star, dijkstra_shortest_paths, dijkstra_shortest_path, bellman_ford_shortest_paths,
 spfa_shortest_paths,has_negative_edge_cycle_spfa,has_negative_edge_cycle, enumerate_paths,
 johnson_shortest_paths, floyd_warshall_shortest_paths, transitiveclosure!, transitiveclosure, transitivereduction,
 yen_k_shortest_paths, desopo_pape_shortest_paths,
